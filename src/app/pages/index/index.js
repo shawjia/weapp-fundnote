@@ -33,6 +33,11 @@ Page({
 
   fetchNames() {
     const { fundList: oriFundList } = this.data;
+
+    if (oriFundList.length === 0) {
+      return;
+    }
+
     const codes = [...(new Set(oriFundList.map(({ code }) => code)))];
 
     Promise.all(codes.map(code => api.info(code))).then((v) => {
@@ -51,25 +56,77 @@ Page({
         };
       });
 
+      this.setData({ fundList }, this.calProfits);
+    });
+  },
+
+  calProfits() {
+    const { fundList: oriFundList } = this.data;
+
+    if (oriFundList.length === 0) {
+      return;
+    }
+
+    const codes = [...(new Set(oriFundList.map(({ code }) => code)))];
+
+    Promise.all(codes.map(code => api.prices(code))).then((v) => {
+      const maps = {};
+
+      v.forEach(({ items }, index) => {
+        const code = codes[index];
+        maps[code] = items;
+      });
+
+      // {date: "2018-10-19", nav: "1.3164", percentage: "3.67", value: "1.3164"}
+      // {date: "2018-10-18", nav: "1.2698", percentage: "-2.60", value: "1.2698"}
+
+      const fundList = oriFundList.map((item) => {
+        const { code, amount, price } = item;
+        let profit = '=';
+        let totalProfit = '-';
+
+        if (maps[code] && maps[code].length === 2) {
+          const start = amount * price;
+          const current = amount * maps[code][0].value;
+          const yesterday = amount * maps[code][1].value;
+
+          profit = (current - yesterday).toFixed(2);
+          totalProfit = (current - start).toFixed(2);
+        }
+
+        return {
+          ...item,
+          profit,
+          totalProfit,
+        };
+      });
+
       this.setData({ fundList });
     });
   },
 
   handleAdd(e) {
-    const { funds } = this.data;
+    const { funds: oriFunds } = this.data;
     const {
       code, amount, price, from,
     } = e.detail.value;
 
     // TODO: check input
 
-    const newFunds = [...funds, {
+    const funds = [...oriFunds, {
       code, amount, price, from, add: Date.now(),
     }];
 
-    this.setData({ funds: newFunds, showAdd: false });
+    const fundList = funds.map(fundItem => ({
+      ...fundItem,
+      name: '-',
+      profit: '-',
+      totalProfit: '-',
+    }));
 
-    wx.setStorageSync('funds', newFunds);
+    this.setData({ funds, fundList, showAdd: false }, this.fetchNames);
+
+    wx.setStorageSync('funds', funds);
   },
 
   toggleShowAdd() {
