@@ -1,3 +1,25 @@
 <view>
-  <text>hello world</text>
+
+  <view class="fund-item" wx:for="{{ funds }}" wx:key="add">
+    <text>{{ item.code }}</text>
+    <text>{{ item.amount }}</text>
+    <text>{{ item.price }}</text>
+    <text>{{ item.from }}</text>
+  </view>
+
+  <button type="default" bindtap="toggleShowAdd" hidden="{{ showAdd }}">
+    新增
+  </button>
+
+  <form class="fund-form" bindsubmit="handleAdd" hidden="{{ !showAdd }}">
+
+    <input name="code" type="text" placeholder="代码" />
+    <input name="amount" type="digit" placeholder="份额" />
+    <input name="price" type="digit" placeholder="均价" />
+    <input name="from" type="text" placeholder="平台" />
+
+    <button type="primary" form-type="submit">增加</button>
+    <button type="default" bindtap="toggleShowAdd">取消</button>
+  </form>
+
 </view>

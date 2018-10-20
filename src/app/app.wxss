@@ -1,0 +1,15 @@
+page {
+  box-sizing: border-box;
+  padding: 0 30rpx;
+}
+
+view {
+  box-sizing: inherit;
+}
+
+view::before,
+view::after,
+page::before,
+page::after {
+  box-sizing: inherit;
+}

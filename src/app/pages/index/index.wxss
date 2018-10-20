@@ -1,0 +1,8 @@
+.fund-item {
+  display: flex;
+  justify-content: space-between;
+}
+
+.fund-form {
+  margin: 30rpx;
+}
