@@ -2,6 +2,9 @@
   "pages": [
     "pages/index/index"
   ],
+  "networkTimeout": {
+    "request": 40000
+  },
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",

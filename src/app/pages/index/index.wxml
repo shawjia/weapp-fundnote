@@ -1,13 +1,21 @@
 <view>
 
-  <view class="fund-item" wx:for="{{ funds }}" wx:key="add">
-    <text>{{ item.code }}</text>
-    <text>{{ item.amount }}</text>
-    <text>{{ item.price }}</text>
-    <text>{{ item.from }}</text>
+  <view class="fund-item" wx:for="{{ fundList }}" wx:key="add">
+    <view class="name">
+      <view>{{ item.name }}</view>
+      <view>{{ item.code }} {{ item.from }}</view>
+    </view>
+    <view>
+      <view>{{ item.price }}</view>
+      <view>{{ item.amount }}</view>
+    </view>
+    <view>
+      <view>{{ item.profit }}</view>
+      <view>{{ item.totalProfit }}</view>
+    </view>
   </view>
 
-  <button type="default" bindtap="toggleShowAdd" hidden="{{ showAdd }}">
+  <button class="fund-add-btn" bindtap="toggleShowAdd" hidden="{{ showAdd }}">
     新增
   </button>
 
@@ -18,8 +26,8 @@
     <input name="price" type="digit" placeholder="均价" />
     <input name="from" type="text" placeholder="平台" />
 
-    <button type="primary" form-type="submit">增加</button>
-    <button type="default" bindtap="toggleShowAdd">取消</button>
+    <button class="fund-btn" type="primary" form-type="submit">增加</button>
+    <button class="fund-btn" type="default" bindtap="toggleShowAdd">取消</button>
   </form>
 
 </view>
