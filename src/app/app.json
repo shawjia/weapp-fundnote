@@ -5,7 +5,7 @@
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "weapp skeleton",
+    "navigationBarTitleText": "定投小记",
     "navigationBarTextStyle": "black"
   }
 }
