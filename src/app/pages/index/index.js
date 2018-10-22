@@ -16,6 +16,9 @@ Page({
     const fundList = funds.map(fundItem => ({
       ...fundItem,
       name: '-',
+      date: '-',
+      current: 0,
+      percent: 0,
       profit: '-',
       totalProfit: '-',
     }));
@@ -82,20 +85,30 @@ Page({
 
       const fundList = oriFundList.map((item) => {
         const { code, amount, price } = item;
+        const start = amount * price;
+        let current = start;
         let profit = '=';
         let totalProfit = '-';
+        let date = '';
+        let percent = '';
 
         if (maps[code] && maps[code].length === 2) {
-          const start = amount * price;
-          const current = amount * maps[code][0].value;
           const yesterday = amount * maps[code][1].value;
+          const { date: lastDate, percentage } = maps[code][0];
 
+          // 2018-10-18 -> 10.18
+          date = lastDate.split('-').slice(1).join('.');
+          percent = +percentage;
+          current = (amount * maps[code][0].value).toFixed(2);
           profit = (current - yesterday).toFixed(2);
           totalProfit = (current - start).toFixed(2);
         }
 
         return {
           ...item,
+          current,
+          percent,
+          date,
           profit,
           totalProfit,
         };
@@ -119,6 +132,9 @@ Page({
 
     const fundList = funds.map(fundItem => ({
       ...fundItem,
+      current: amount * price,
+      percent: 0,
+      date: '',
       name: '-',
       profit: '-',
       totalProfit: '-',

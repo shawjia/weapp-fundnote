@@ -1,19 +1,20 @@
 .fund-item {
   display: flex;
   justify-content: space-between;
-  border-top: 1rpx solid #e6e6ea;
   border-bottom: 1rpx solid #e6e6ea;
 }
 
 .fund-item .name {
-  flex: 2;
+  flex: 1.2;
   text-align: left;
 }
 
 .fund-item > view {
   flex: 1;
   white-space: nowrap;
-  text-align: right;
+  align-self: center;
+  text-align: center;
+  overflow: hidden;
 }
 
 .fund-btn {

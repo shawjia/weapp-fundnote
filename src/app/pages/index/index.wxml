@@ -1,17 +1,23 @@
 <view>
 
+  <view class="fund-item">
+    <view class="name">基金名称</view>
+    <view>近日收益</view>
+    <view>总收益</view>
+  </view>
+
   <view class="fund-item" wx:for="{{ fundList }}" wx:key="add">
     <view class="name">
       <view>{{ item.name }}</view>
       <view>{{ item.code }} {{ item.from }}</view>
     </view>
     <view>
-      <view>{{ item.price }}</view>
-      <view>{{ item.amount }}</view>
+      <view>{{ item.profit }}</view>
+      <view>{{ item.date }} {{ item.percent + '%'}}</view>
     </view>
     <view>
-      <view>{{ item.profit }}</view>
       <view>{{ item.totalProfit }}</view>
+      <view>{{ item.current }}</view>
     </view>
   </view>
 
