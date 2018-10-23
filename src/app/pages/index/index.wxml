@@ -25,6 +25,12 @@
     新增
   </button>
 
+  <button class="fund-add-btn" bindtap="syncFunds">
+    同步
+  </button>
+
+
+
   <form class="fund-form" bindsubmit="handleAdd" hidden="{{ !showAdd }}">
 
     <input name="code" type="text" placeholder="代码" />

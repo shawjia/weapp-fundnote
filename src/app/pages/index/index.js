@@ -2,8 +2,6 @@
 
 const api = require('../../api');
 
-const app = getApp();
-
 Page({
   data: {
     funds: [],
@@ -12,26 +10,27 @@ Page({
   },
 
   onLoad() {
-    const funds = wx.getStorageSync('funds') || [];
-    const fundList = funds.map(fundItem => ({
-      ...fundItem,
-      name: '-',
-      date: '-',
-      current: 0,
-      percent: 0,
-      profit: '-',
-      totalProfit: '-',
-    }));
+    wx.cloud.callFunction({ name: 'funds' })
+      .then((res) => {
+        const funds = res.result.funds || [];
+        const fundList = funds.map(fundItem => ({
+          ...fundItem,
+          name: '-',
+          date: '-',
+          current: 0,
+          percent: 0,
+          profit: '-',
+          totalProfit: '-',
+        }));
 
-    const showAdd = funds.length === 0;
+        const showAdd = funds.length === 0;
 
-    this.setData({ funds, fundList, showAdd });
-
-    this.fetchNames();
-  },
-
-  onShow() {
-    console.log('ohShow', app.globalData);
+        this.setData({ funds, fundList, showAdd }, this.fetchNames);
+      })
+      .catch((err) => {
+        console.error(err);
+        throw (err);
+      });
   },
 
   fetchNames() {
@@ -140,9 +139,10 @@ Page({
       totalProfit: '-',
     }));
 
-    this.setData({ funds, fundList, showAdd: false }, this.fetchNames);
-
-    wx.setStorageSync('funds', funds);
+    this.setData({ funds, fundList, showAdd: false }, () => {
+      this.fetchNames();
+      this.syncFunds();
+    });
   },
 
   toggleShowAdd() {
@@ -151,6 +151,20 @@ Page({
     this.setData({
       showAdd: !showAdd,
     });
+  },
+
+  syncFunds() {
+    const { funds } = this.data;
+
+    wx.cloud.callFunction({ name: 'sync', data: { funds } })
+      .then((res) => {
+        console.log(res.result.code);
+        wx.showToast({ title: '同步成功' });
+      })
+      .catch((err) => {
+        console.error(err);
+        wx.showToast({ title: '同步失败', icon: 'error' });
+      });
   },
 
 });

@@ -5,6 +5,7 @@
   "networkTimeout": {
     "request": 40000
   },
+  "cloud": true,
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
