@@ -2,11 +2,11 @@
 
 const api = require('../../api');
 
+const app = getApp();
+
 Page({
   data: {
-    funds: [],
     fundList: [],
-    showAdd: false,
   },
 
   onLoad() {
@@ -21,11 +21,13 @@ Page({
           percent: 0,
           profit: '-',
           totalProfit: '-',
+          color: '',
+          totalColor: '',
         }));
 
-        const showAdd = funds.length === 0;
+        app.globalData.funds = funds;
 
-        this.setData({ funds, fundList, showAdd }, this.fetchNames);
+        this.setData({ fundList }, this.fetchNames);
       })
       .catch((err) => {
         console.error(err);
@@ -95,8 +97,8 @@ Page({
           const yesterday = amount * maps[code][1].value;
           const { date: lastDate, percentage } = maps[code][0];
 
-          // 2018-10-18 -> 10.18
-          date = lastDate.split('-').slice(1).join('.');
+          // 2018-10-18 -> 10-18
+          date = lastDate.split('-').slice(1).join('-');
           percent = +percentage;
           current = (amount * maps[code][0].value).toFixed(2);
           profit = (current - yesterday).toFixed(2);
@@ -110,6 +112,8 @@ Page({
           date,
           profit,
           totalProfit,
+          color: profit.includes('-') ? 'lose' : 'win',
+          totalColor: totalProfit.includes('-') ? 'lose' : 'win',
         };
       });
 
@@ -117,54 +121,10 @@ Page({
     });
   },
 
-  handleAdd(e) {
-    const { funds: oriFunds } = this.data;
-    const {
-      code, amount, price, from,
-    } = e.detail.value;
 
-    // TODO: check input
-
-    const funds = [...oriFunds, {
-      code, amount, price, from, add: Date.now(),
-    }];
-
-    const fundList = funds.map(fundItem => ({
-      ...fundItem,
-      current: amount * price,
-      percent: 0,
-      date: '',
-      name: '-',
-      profit: '-',
-      totalProfit: '-',
-    }));
-
-    this.setData({ funds, fundList, showAdd: false }, () => {
-      this.fetchNames();
-      this.syncFunds();
-    });
+  switchAdd() {
+    wx.navigateTo({ url: '/pages/add/add' });
   },
 
-  toggleShowAdd() {
-    const { showAdd } = this.data;
-
-    this.setData({
-      showAdd: !showAdd,
-    });
-  },
-
-  syncFunds() {
-    const { funds } = this.data;
-
-    wx.cloud.callFunction({ name: 'sync', data: { funds } })
-      .then((res) => {
-        console.log(res.result.code);
-        wx.showToast({ title: '同步成功' });
-      })
-      .catch((err) => {
-        console.error(err);
-        wx.showToast({ title: '同步失败', icon: 'error' });
-      });
-  },
 
 });

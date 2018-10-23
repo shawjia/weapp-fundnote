@@ -3,14 +3,13 @@
 App({
 
   onLaunch() {
-    console.log('onLaunch');
-
     wx.cloud.init({
       traceUser: true,
     });
   },
 
   globalData: {
+    funds: [],
   },
 
 });

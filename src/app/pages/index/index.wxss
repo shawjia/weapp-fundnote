@@ -5,8 +5,12 @@
 }
 
 .fund-item .name {
-  flex: 1.2;
+  flex: 2;
   text-align: left;
+}
+
+.fund-item .latest {
+  flex: 1;
 }
 
 .fund-item > view {
@@ -15,12 +19,26 @@
   align-self: center;
   text-align: center;
   overflow: hidden;
+  align-content: center;
+}
+
+.small {
+  font-size: 75%;
+  color: #888;
+}
+
+.name .small {
+  padding-left: 10rpx;
 }
 
 .fund-btn {
   margin-top: 30rpx;
 }
 
-.fund-form {
-  margin: 30rpx;
+.win {
+  color: #09bb07;
+}
+
+.lose {
+  color: #e64340;
 }

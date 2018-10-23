@@ -1,0 +1,7 @@
+.fund-btn {
+  margin-top: 30rpx;
+}
+
+.fund-form {
+  margin: 30rpx;
+}

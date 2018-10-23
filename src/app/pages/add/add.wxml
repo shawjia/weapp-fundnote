@@ -1,0 +1,14 @@
+<view>
+
+  <form class="fund-form" bindsubmit="handleAdd">
+
+    <input name="code" type="text" placeholder="代码" />
+    <input name="amount" type="digit" placeholder="份额" />
+    <input name="price" type="digit" placeholder="均价" />
+    <input name="from" type="text" placeholder="平台" />
+
+    <button class="fund-btn" type="primary" form-type="submit">增加</button>
+    <button class="fund-btn" type="default" bindtap="switchHome">取消</button>
+  </form>
+
+</view>

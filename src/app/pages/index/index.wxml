@@ -2,44 +2,30 @@
 
   <view class="fund-item">
     <view class="name">基金名称</view>
-    <view>近日收益</view>
+    <view class="latest">近日收益</view>
     <view>总收益</view>
   </view>
 
   <view class="fund-item" wx:for="{{ fundList }}" wx:key="add">
     <view class="name">
-      <view>{{ item.name }}</view>
-      <view>{{ item.code }} {{ item.from }}</view>
+      <view>
+        <text>{{ item.code }}</text>
+        <text class="small">{{ item.from }}</text>
+      </view>
+      <view class="small">{{ item.name }}</view>
+    </view>
+    <view class="latest">
+      <view class="{{ item.color }}">{{ item.profit }}</view>
+      <view class="small">{{ item.percent + '%'}}</view>
     </view>
     <view>
-      <view>{{ item.profit }}</view>
-      <view>{{ item.date }} {{ item.percent + '%'}}</view>
-    </view>
-    <view>
-      <view>{{ item.totalProfit }}</view>
-      <view>{{ item.current }}</view>
+      <view class="{{ item.totalColor }}">{{ item.totalProfit }}</view>
+      <view class="small">{{ item.date }}</view>
     </view>
   </view>
 
-  <button class="fund-add-btn" bindtap="toggleShowAdd" hidden="{{ showAdd }}">
+  <button class="fund-btn" type="primary" bindtap="switchAdd">
     新增
   </button>
-
-  <button class="fund-add-btn" bindtap="syncFunds">
-    同步
-  </button>
-
-
-
-  <form class="fund-form" bindsubmit="handleAdd" hidden="{{ !showAdd }}">
-
-    <input name="code" type="text" placeholder="代码" />
-    <input name="amount" type="digit" placeholder="份额" />
-    <input name="price" type="digit" placeholder="均价" />
-    <input name="from" type="text" placeholder="平台" />
-
-    <button class="fund-btn" type="primary" form-type="submit">增加</button>
-    <button class="fund-btn" type="default" bindtap="toggleShowAdd">取消</button>
-  </form>
 
 </view>
