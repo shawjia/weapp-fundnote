@@ -18,4 +18,4 @@
 
 <hr />
 
-based on <https://github.com/shawjia/weapp-skeleton>
+build on <https://github.com/shawjia/weapp-skeleton>

@@ -19,7 +19,11 @@ Page({
   },
 
   switchHome() {
-    wx.navigateTo({ url: '/pages/index/index' });
+    if (getCurrentPages().length > 1) {
+      wx.navigateBack({ delta: 1 });
+    } else {
+      wx.redirectTo({ url: '/pages/index/index' });
+    }
   },
 
   handleAdd(e) {

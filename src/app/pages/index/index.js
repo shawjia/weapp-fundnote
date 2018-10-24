@@ -9,7 +9,7 @@ Page({
     fundList: [],
   },
 
-  onLoad() {
+  onShow() {
     wx.cloud.callFunction({ name: 'funds' })
       .then((res) => {
         const funds = res.result.funds || [];
