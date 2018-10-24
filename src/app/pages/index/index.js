@@ -9,6 +9,14 @@ Page({
     fundList: [],
   },
 
+  onShareAppMessage() {
+    return {
+      title: '广积粮 缓称王',
+      path: '/pages/index/index',
+      imageUrl: '/smile.jpg',
+    };
+  },
+
   onShow() {
     wx.cloud.callFunction({ name: 'funds' })
       .then((res) => {
