@@ -24,8 +24,6 @@
     </view>
   </view>
 
-  <button class="fund-btn" type="primary" bindtap="switchAdd">
-    新增
-  </button>
+  <van-button type="primary" size="large" bindtap="switchAdd">新增</van-button>
 
 </view>
