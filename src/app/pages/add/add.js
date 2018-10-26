@@ -1,7 +1,9 @@
 // https://developers.weixin.qq.com/miniprogram/dev/framework/app-service/page.html
 
+import { isNumber } from '../../utils/util';
+
 const app = getApp();
-const CODE_REX = /^\d+$/;
+const CODE_REX = /^\d{6}$/;
 
 Page({
   data: {
@@ -13,6 +15,9 @@ Page({
     hasAmountErr: false,
     hasPriceErr: false,
     canSumit: false,
+
+    text: '',
+    hasTextErr: false,
   },
 
   onLoad() {
@@ -46,13 +51,13 @@ Page({
 
       case 'amount':
         amount = input;
-        hasAmountErr = isEmpty || Number.isNaN(input);
+        hasAmountErr = isEmpty || !isNumber(input);
         newData.hasAmountErr = hasAmountErr;
         break;
 
       case 'price':
         price = input;
-        hasPriceErr = isEmpty || Number.isNaN(input);
+        hasPriceErr = isEmpty || !isNumber(input);
         newData.hasPriceErr = hasPriceErr;
         break;
 
@@ -66,12 +71,55 @@ Page({
     this.setData(newData);
   },
 
+  onChangeText(e) {
+    const text = e.detail.trim();
+
+    this.setData({ text, hasTextErr: text !== '' });
+  },
+
   switchHome() {
     if (getCurrentPages().length > 1) {
       wx.navigateBack({ delta: 1 });
     } else {
       wx.redirectTo({ url: '/pages/index/index' });
     }
+  },
+
+  handleBatch() {
+    const { text } = this.data;
+    const lines = text.split(/\n|\r/)
+      .filter(line => line.includes(',') || line.includes('，') || /\t/.test(line))
+      .map(line => line.split(/,|，|\t/).map(v => v.trim()))
+      .filter((fund) => {
+        const [code, price, amount] = fund;
+
+        return CODE_REX.test(code)
+          && isNumber(price)
+          && isNumber(amount);
+      });
+
+    const total = lines.length;
+
+    if (total === 0) {
+      wx.showToast({ title: '输入内容无效', icon: 'none' });
+      return;
+    }
+
+    const now = Date.now();
+    const newFunds = lines.map((fund, index) => {
+      const [code, price, amount, from] = fund;
+      return {
+        code,
+        price,
+        amount,
+        from: from || '未知',
+        add: now - index,
+      };
+    });
+
+    const funds = [...app.globalData.funds, ...newFunds];
+
+    this.syncFunds(funds);
   },
 
   handleAdd() {
@@ -84,12 +132,8 @@ Page({
     }
 
     const funds = [...app.globalData.funds, {
-      code, amount, price, from, add: Date.now(),
+      code, amount, price, from: from || '未知', add: Date.now(),
     }];
-
-    app.globalData.funds = funds;
-
-    wx.showLoading({ title: '添加中...' });
 
     this.syncFunds(funds);
   },
@@ -97,6 +141,10 @@ Page({
   // TODO: cloud sync is optional, save local by default
 
   syncFunds(funds) {
+    app.globalData.funds = funds;
+
+    wx.showLoading({ title: '添加中...', mask: true });
+
     wx.cloud.callFunction({ name: 'sync', data: { funds } })
       .then((res) => {
         console.log(res.result.code);

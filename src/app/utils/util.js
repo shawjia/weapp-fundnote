@@ -18,7 +18,9 @@ const request = (url, data = {}, opts = {}) => new Promise((resolve, reject) => 
   });
 });
 
+const isNumber = n => !Number.isNaN(parseFloat(n));
 
 module.exports = {
   request,
+  isNumber,
 };

@@ -2,11 +2,13 @@
   display: flex;
   justify-content: space-between;
   border-bottom: 1rpx solid #e6e6ea;
+  padding: 10rpx 0;
 }
 
 .fund-item .name {
   flex: 2;
   text-align: left;
+  padding-left: 30rpx;
 }
 
 .fund-item .latest {
@@ -29,10 +31,6 @@
 
 .name .small {
   padding-left: 10rpx;
-}
-
-.fund-btn {
-  margin-top: 30rpx;
 }
 
 .win {

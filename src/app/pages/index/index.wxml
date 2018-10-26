@@ -1,4 +1,5 @@
-<view>
+<van-panel use-footer-slot>
+
 
   <view class="fund-item">
     <view class="name">基金名称</view>
@@ -24,6 +25,8 @@
     </view>
   </view>
 
-  <van-button type="primary" size="large" bindtap="switchAdd">新增</van-button>
 
-</view>
+  <view slot="footer">
+    <van-button size="large" bindtap="switchAdd">新增</van-button>
+  </view>
+</van-panel>
