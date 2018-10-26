@@ -5,6 +5,14 @@ const CODE_REX = /^\d+$/;
 
 Page({
   data: {
+    code: '',
+    amount: '',
+    price: '',
+    from: '',
+    hasCodeErr: false,
+    hasAmountErr: false,
+    hasPriceErr: false,
+    canSumit: false,
   },
 
   onLoad() {
@@ -18,6 +26,46 @@ Page({
       });
   },
 
+  onChange(e) {
+    const name = e.target.id;
+    const input = e.detail.trim();
+    const isEmpty = input === '';
+    const newData = {};
+    let {
+      code, amount, price, hasCodeErr, hasAmountErr, hasPriceErr,
+    } = this.data;
+
+    newData[name] = input;
+
+    switch (name) {
+      case 'code':
+        code = input;
+        hasCodeErr = isEmpty || !CODE_REX.test(input);
+        newData.hasCodeErr = hasCodeErr;
+        break;
+
+      case 'amount':
+        amount = input;
+        hasAmountErr = isEmpty || Number.isNaN(input);
+        newData.hasAmountErr = hasAmountErr;
+        break;
+
+      case 'price':
+        price = input;
+        hasPriceErr = isEmpty || Number.isNaN(input);
+        newData.hasPriceErr = hasPriceErr;
+        break;
+
+      default:
+        break;
+    }
+
+    newData.canSumit = code !== '' && amount !== '' && price !== ''
+      && !hasCodeErr && !hasAmountErr && !hasPriceErr;
+
+    this.setData(newData);
+  },
+
   switchHome() {
     if (getCurrentPages().length > 1) {
       wx.navigateBack({ delta: 1 });
@@ -26,29 +74,12 @@ Page({
     }
   },
 
-  handleAdd(e) {
-    let {
-      code, amount, price, from,
-    } = e.detail.value;
+  handleAdd() {
+    const {
+      code, amount, price, from, canSumit,
+    } = this.data;
 
-    code = code.trim();
-    amount = amount.trim();
-    price = price.trim();
-    from = from.trim() || '未知';
-
-    if (code === '' || !CODE_REX.test(code)) {
-      wx.showToast({ title: '无效代码', icon: 'none' });
-      return;
-    }
-
-
-    if (amount === '' || Number.isNaN(amount)) {
-      wx.showToast({ title: '无效份额', icon: 'none' });
-      return;
-    }
-
-    if (price === '' || Number.isNaN(price)) {
-      wx.showToast({ title: '无效均价', icon: 'none' });
+    if (!canSumit) {
       return;
     }
 
