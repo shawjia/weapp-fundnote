@@ -1,4 +1,7 @@
-# 定投小记
+<div align="center">
+  <img alt="微信小程序： 定投小记" src="https://user-images.githubusercontent.com/361645/47598614-d123a800-d9d0-11e8-9d01-87d57665ce89.png">
+</div>
+
 
 ## FEATURE
 
@@ -11,7 +14,7 @@
     - [ ] 1/2 基金汇总
     - [ ] 2/2 平台汇总
 
-- [ ] 批量导入
+- [x] 批量导入
 
 - [x] 云同步
 
