@@ -20,17 +20,6 @@ Page({
     hasTextErr: false,
   },
 
-  onLoad() {
-    wx.cloud.callFunction({ name: 'funds' })
-      .then((res) => {
-        app.globalData.funds = res.result.funds || [];
-      })
-      .catch((err) => {
-        console.error(err);
-        throw (err);
-      });
-  },
-
   onChange(e) {
     const name = e.target.id;
     const input = e.detail.trim();

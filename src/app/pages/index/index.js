@@ -1,6 +1,9 @@
 // https://developers.weixin.qq.com/miniprogram/dev/framework/app-service/page.html
 
+import { formatPrice } from '../../utils/util';
+
 const api = require('../../api');
+
 
 const app = getApp();
 let prices = {};
@@ -90,8 +93,9 @@ Page({
       return item;
     });
 
-    latestProfit = latestProfit.toFixed(2);
-    allProfit = allProfit.toFixed(2);
+    latestProfit = formatPrice(latestProfit.toFixed(2));
+    allProfit = formatPrice(allProfit.toFixed(2));
+
     const latestProfitColor = latestProfit.includes('-') ? 'lose' : 'win';
     const allProfitColor = allProfit.includes('-') ? 'lose' : 'win';
 
@@ -126,9 +130,9 @@ Page({
       oriProfit = current - yesterday;
       oriTotalProfit = current - start;
 
-      profit = oriProfit.toFixed(2);
-      totalProfit = oriTotalProfit.toFixed(2);
-      current = current.toFixed(2);
+      profit = formatPrice(oriProfit.toFixed(2));
+      totalProfit = formatPrice(oriTotalProfit.toFixed(2));
+      current = formatPrice(current.toFixed(2));
     }
 
     return {

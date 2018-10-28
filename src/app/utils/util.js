@@ -19,8 +19,10 @@ const request = (url, data = {}, opts = {}) => new Promise((resolve, reject) => 
 });
 
 const isNumber = n => !Number.isNaN(+n);
+const formatPrice = str => (str.includes('-') ? str : `+${str}`);
 
 module.exports = {
   request,
   isNumber,
+  formatPrice,
 };
