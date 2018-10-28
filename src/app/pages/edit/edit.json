@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "添加基金",
+  "navigationBarTitleText": "修改基金",
   "usingComponents": {
     "footer": "/components/footer",
     "van-tab": "vant-weapp/tab/index",

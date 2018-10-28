@@ -120,4 +120,10 @@ Page({
     wx.navigateTo({ url: '/pages/add/add' });
   },
 
+  goEdit(e) {
+    const { id } = e.currentTarget.dataset;
+
+    wx.navigateTo({ url: `/pages/edit/edit?id=${id}` });
+  },
+
 });

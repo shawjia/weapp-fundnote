@@ -7,7 +7,7 @@
     <view>总收益</view>
   </view>
 
-  <view class="fund-item" wx:for="{{ fundList }}" wx:key="add">
+  <view class="fund-item" wx:for="{{ fundList }}" wx:key="add" bindtap="goEdit" data-id="{{ index }}">
     <view class="name">
       <view class="code-and-from">
         <text>{{ item.code }}</text>

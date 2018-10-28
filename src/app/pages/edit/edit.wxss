@@ -1,0 +1,14 @@
+.fund-form {
+  margin: 30rpx;
+}
+
+.fund-textarea {
+  color: gray;
+}
+
+.tips {
+  font-size: 80%;
+  color: gray;
+  text-align: center;
+  margin-top: 10rpx;
+}

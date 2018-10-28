@@ -1,0 +1,15 @@
+<van-cell-group>
+
+  <van-field disabled id="code" required label="代码" placeholder="请输入6位数字基金代码" value="{{ code }}" />
+  <van-field error="{{ hasPriceErr }}" bind:change="onChange" id="price" required clearable type="digit" label="均价"
+    placeholder="请输入均价" value="{{ price }}" />
+  <van-field error="{{ hasAmountErr }}" bind:change="onChange" id="amount" required clearable type="digit" label="份额"
+    placeholder="请输入份额" value="{{ amount }}" />
+  <van-field bind:change="onChange" id="from" value="{{ from }}" border="{{ false }}" clearable label="平台" placeholder="请输入平台名称" />
+
+  <van-button custom-class="fund-btn" type="primary" size="large" bindtap="handleEdit">编辑</van-button>
+  <van-button type="danger" size="large" bindtap="handleDel">删除</van-button>
+
+</van-cell-group>
+
+<footer />

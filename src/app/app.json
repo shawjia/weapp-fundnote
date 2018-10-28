@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/edit/edit",
     "pages/add/add"
   ],
   "networkTimeout": {
