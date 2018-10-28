@@ -10,6 +10,7 @@ App({
 
   globalData: {
     funds: [],
+    names: {},
   },
 
 });

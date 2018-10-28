@@ -44,32 +44,33 @@ Page({
   },
 
   fetchNames() {
+    const { fundList } = this.data;
+    const { names } = app.globalData;
+    const codes = [...(new Set(fundList.map(({ code }) => code)))]
+      .filter(code => !(code in names));
+
+    Promise.all(codes.map(code => api.info(code)))
+      .then((v) => {
+        v.forEach(({ fd_name: name, fd_code: code }) => {
+          names[code] = name;
+        });
+      })
+      .then(this.setNames);
+  },
+
+  setNames() {
     const { fundList: oriFundList } = this.data;
+    const { names } = app.globalData;
+    const fundList = oriFundList.map((item) => {
+      const { code } = item;
 
-    if (oriFundList.length === 0) {
-      return;
-    }
-
-    const codes = [...(new Set(oriFundList.map(({ code }) => code)))];
-
-    Promise.all(codes.map(code => api.info(code))).then((v) => {
-      const maps = {};
-
-      v.forEach(({ fd_name: name, fd_code: code }) => {
-        maps[code] = name;
-      });
-
-      const fundList = oriFundList.map((item) => {
-        const { code } = item;
-
-        return {
-          ...item,
-          name: maps[code] || '-',
-        };
-      });
-
-      this.setData({ fundList }, this.calProfits);
+      return {
+        ...item,
+        name: names[code] || '-',
+      };
     });
+
+    this.setData({ fundList }, this.calProfits);
   },
 
   calProfits() {
@@ -129,10 +130,8 @@ Page({
     });
   },
 
-
   switchAdd() {
     wx.navigateTo({ url: '/pages/add/add' });
   },
-
 
 });
