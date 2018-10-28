@@ -3,11 +3,17 @@
 const api = require('../../api');
 
 const app = getApp();
-const prices = {};
+let prices = {};
 
 Page({
   data: {
     fundList: [],
+  },
+
+  onPullDownRefresh() {
+    prices = {};
+    this.fetchPrices();
+    wx.stopPullDownRefresh();
   },
 
   onShareAppMessage() {

@@ -1,4 +1,5 @@
 {
+  "enablePullDownRefresh": true,
   "usingComponents": {
     "van-panel": "vant-weapp/panel/index",
     "van-button": "vant-weapp/button/index"
