@@ -11,7 +11,7 @@
       <van-field bind:change="onChange" id="from" value="{{ from }}" clearable label="平台" placeholder="请输入平台名称" />
 
       <van-button custom-class="fund-btn" type="primary" size="large" bindtap="handleAdd">添加</van-button>
-      <van-button custom-class="fund-btn" type="default" size="large" bindtap="switchHome">取消</van-button>
+      <van-button type="default" size="large" bindtap="switchHome">取消</van-button>
 
     </van-cell-group>
 
@@ -24,10 +24,15 @@
         autosize clearable />
 
       <van-button custom-class="fund-btn" type="primary" size="large" bindtap="handleBatch">导入</van-button>
-      <van-button custom-class="fund-btn" type="default" size="large" bindtap="switchHome">取消</van-button>
+      <van-button type="default" size="large" bindtap="switchHome">取消</van-button>
 
-      <view class="tips">格式：代码,均价,份额,平台 逗号分割，每行一条</view>
+      <view class="tips">
+        格式：代码,均价,份额,平台
+        逗号或制表符分割，每行一条
+      </view>
 
     </van-cell-group>
   </van-tab>
 </van-tabs>
+
+<footer />

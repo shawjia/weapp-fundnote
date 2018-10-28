@@ -1,0 +1,3 @@
+<view class="footer">
+  定投小记 {{ version }}
+</view>

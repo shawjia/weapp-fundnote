@@ -1,6 +1,7 @@
 {
   "enablePullDownRefresh": true,
   "usingComponents": {
+    "footer": "/components/footer",
     "van-panel": "vant-weapp/panel/index",
     "van-button": "vant-weapp/button/index"
   }

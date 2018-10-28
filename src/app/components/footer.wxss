@@ -1,0 +1,7 @@
+.footer {
+  color: #888;
+  text-align: center;
+  font-size: 80%;
+  line-height: 2;
+  margin-top: 30rpx;
+}

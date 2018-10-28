@@ -1,4 +1,4 @@
-<van-panel use-footer-slot>
+<van-panel>
 
 
   <view class="fund-item" wx:if="{{ fundList.length }}">
@@ -25,8 +25,8 @@
     </view>
   </view>
 
-
-  <view slot="footer">
-    <van-button size="large" bindtap="switchAdd">新增</van-button>
-  </view>
 </van-panel>
+
+<van-button custom-class="fund-btn" size="large" bindtap="switchAdd">新增</van-button>
+
+<footer />
