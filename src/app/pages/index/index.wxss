@@ -29,8 +29,13 @@
   color: #888;
 }
 
-.name .small {
+.from {
   padding-left: 10rpx;
+}
+
+.code-and-from {
+  display: flex;
+  align-items: center;
 }
 
 .win {

@@ -9,9 +9,9 @@
 
   <view class="fund-item" wx:for="{{ fundList }}" wx:key="add">
     <view class="name">
-      <view>
+      <view class="code-and-from">
         <text>{{ item.code }}</text>
-        <text class="small">{{ item.from }}</text>
+        <text class="small from">{{ item.from }}</text>
       </view>
       <view class="small">{{ item.name }}</view>
     </view>
