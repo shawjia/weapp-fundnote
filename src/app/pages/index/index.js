@@ -3,6 +3,7 @@
 const api = require('../../api');
 
 const app = getApp();
+const prices = {};
 
 Page({
   data: {
@@ -20,22 +21,9 @@ Page({
   onShow() {
     wx.cloud.callFunction({ name: 'funds' })
       .then((res) => {
-        const funds = res.result.funds || [];
-        const fundList = funds.map(fundItem => ({
-          ...fundItem,
-          name: '-',
-          date: '-',
-          current: 0,
-          percent: 0,
-          profit: '-',
-          totalProfit: '-',
-          color: '',
-          totalColor: '',
-        }));
+        app.globalData.funds = res.result.funds || [];
 
-        app.globalData.funds = funds;
-
-        this.setData({ fundList }, this.fetchNames);
+        this.fetchNames();
       })
       .catch((err) => {
         console.error(err);
@@ -44,9 +32,8 @@ Page({
   },
 
   fetchNames() {
-    const { fundList } = this.data;
-    const { names } = app.globalData;
-    const codes = [...(new Set(fundList.map(({ code }) => code)))]
+    const { names, funds } = app.globalData;
+    const codes = [...(new Set(funds.map(({ code }) => code)))]
       .filter(code => !(code in names));
 
     Promise.all(codes.map(code => api.info(code)))
@@ -55,79 +42,72 @@ Page({
           names[code] = name;
         });
       })
-      .then(this.setNames);
+      .then(this.fetchPrices);
   },
 
-  setNames() {
-    const { fundList: oriFundList } = this.data;
-    const { names } = app.globalData;
-    const fundList = oriFundList.map((item) => {
-      const { code } = item;
+  fetchPrices() {
+    const { funds } = app.globalData;
+    const codes = [...(new Set(funds.map(({ code }) => code)))]
+      .filter(code => !(code in prices));
 
-      return {
-        ...item,
-        name: names[code] || '-',
-      };
+    Promise.all(codes.map(code => api.prices(code)))
+      .then((v) => {
+        v.forEach(({ items }, index) => {
+          const code = codes[index];
+          prices[code] = items;
+        });
+      })
+      .then(this.setFundList);
+  },
+
+  setFundList() {
+    const { names, funds } = app.globalData;
+
+    const fundList = funds.map((fund) => {
+      const { code } = fund;
+
+      const item = this.calProfit(fund);
+      item.name = names[code] || '-';
+
+      return item;
     });
 
-    this.setData({ fundList }, this.calProfits);
+    this.setData({ fundList });
   },
 
-  calProfits() {
-    const { fundList: oriFundList } = this.data;
+  calProfit(item) {
+    const { code, amount, price } = item;
+    const start = amount * price;
+    let current = start;
+    let profit = '=';
+    let totalProfit = '-';
+    let date = '';
+    let percent = '';
 
-    if (oriFundList.length === 0) {
-      return;
+    // {date: "2018-10-19", nav: "1.3164", percentage: "3.67", value: "1.3164"}
+    // {date: "2018-10-18", nav: "1.2698", percentage: "-2.60", value: "1.2698"}
+    if (prices[code] && prices[code].length === 2) {
+      const yesterday = amount * prices[code][1].value;
+      const { date: lastDate, percentage } = prices[code][0];
+
+      // 2018-10-18 -> 10-18
+      date = lastDate.split('-').slice(1).join('-');
+      percent = +percentage;
+      current = (amount * prices[code][0].value).toFixed(2);
+      profit = (current - yesterday).toFixed(2);
+      totalProfit = (current - start).toFixed(2);
     }
 
-    const codes = [...(new Set(oriFundList.map(({ code }) => code)))];
-
-    Promise.all(codes.map(code => api.prices(code))).then((v) => {
-      const maps = {};
-
-      v.forEach(({ items }, index) => {
-        const code = codes[index];
-        maps[code] = items;
-      });
-
-      // {date: "2018-10-19", nav: "1.3164", percentage: "3.67", value: "1.3164"}
-      // {date: "2018-10-18", nav: "1.2698", percentage: "-2.60", value: "1.2698"}
-
-      const fundList = oriFundList.map((item) => {
-        const { code, amount, price } = item;
-        const start = amount * price;
-        let current = start;
-        let profit = '=';
-        let totalProfit = '-';
-        let date = '';
-        let percent = '';
-
-        if (maps[code] && maps[code].length === 2) {
-          const yesterday = amount * maps[code][1].value;
-          const { date: lastDate, percentage } = maps[code][0];
-
-          // 2018-10-18 -> 10-18
-          date = lastDate.split('-').slice(1).join('-');
-          percent = +percentage;
-          current = (amount * maps[code][0].value).toFixed(2);
-          profit = (current - yesterday).toFixed(2);
-          totalProfit = (current - start).toFixed(2);
-        }
-
-        return {
-          ...item,
-          current,
-          percent,
-          date,
-          profit,
-          totalProfit,
-          color: profit.includes('-') ? 'lose' : 'win',
-          totalColor: totalProfit.includes('-') ? 'lose' : 'win',
-        };
-      });
-
-      this.setData({ fundList });
-    });
+    return {
+      ...item,
+      current,
+      percent,
+      date,
+      profit,
+      totalProfit,
+      color: profit.includes('-') ? 'lose' : 'win',
+      totalColor: totalProfit.includes('-') ? 'lose' : 'win',
+    };
   },
 
   switchAdd() {

@@ -1,7 +1,7 @@
 <van-panel use-footer-slot>
 
 
-  <view class="fund-item">
+  <view class="fund-item" wx:if="{{ fundList.length }}">
     <view class="name">基金名称</view>
     <view class="latest">近日收益</view>
     <view>总收益</view>
