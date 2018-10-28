@@ -1,7 +1,6 @@
-<van-panel>
+<van-panel use-footer-slot footer-class="fund-total" wx:if="{{ fundList.length }}">
 
-
-  <view class="fund-item" wx:if="{{ fundList.length }}">
+  <view class="fund-item">
     <view class="name">基金名称</view>
     <view class="latest">近日收益</view>
     <view>总收益</view>
@@ -23,6 +22,12 @@
       <view class="{{ item.totalColor }}">{{ item.totalProfit }}</view>
       <view class="small">{{ item.date }}</view>
     </view>
+  </view>
+
+
+  <view slot="footer">
+    <view class="{{ latestProfitColor }}"> 近日: {{ latestProfit }} </view>
+    <view class="{{ allProfitColor }}"> 累计: {{ allProfit }} </view>
   </view>
 
 </van-panel>

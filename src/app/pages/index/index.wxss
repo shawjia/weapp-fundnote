@@ -45,3 +45,7 @@
 .lose {
   color: #e64340;
 }
+
+.fund-total {
+  text-align: right;
+}

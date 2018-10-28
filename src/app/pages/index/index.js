@@ -8,6 +8,10 @@ let prices = {};
 Page({
   data: {
     fundList: [],
+    latestProfit: 0,
+    latestProfitColor: 'win',
+    allProfit: 0,
+    allProfitColor: 'win',
   },
 
   onPullDownRefresh() {
@@ -68,6 +72,8 @@ Page({
 
   setFundList() {
     const { names, funds } = app.globalData;
+    let latestProfit = 0;
+    let allProfit = 0;
 
     const fundList = funds.map((fund) => {
       const { code } = fund;
@@ -75,20 +81,36 @@ Page({
       const item = this.calProfit(fund);
       item.name = names[code] || '-';
 
+      latestProfit += item.oriProfit;
+      allProfit += item.oriTotalProfit;
+
+      delete item.oriProfit;
+      delete item.oriTotalProfit;
+
       return item;
     });
 
-    this.setData({ fundList });
+    latestProfit = latestProfit.toFixed(2);
+    allProfit = allProfit.toFixed(2);
+    const latestProfitColor = latestProfit.includes('-') ? 'lose' : 'win';
+    const allProfitColor = allProfit.includes('-') ? 'lose' : 'win';
+
+
+    this.setData({
+      fundList, latestProfit, allProfit, latestProfitColor, allProfitColor,
+    });
   },
 
   calProfit(item) {
     const { code, amount, price } = item;
     const start = amount * price;
     let current = start;
-    let profit = '=';
+    let profit = '-';
     let totalProfit = '-';
     let date = '';
     let percent = '';
+    let oriProfit = 0;
+    let oriTotalProfit = 0;
 
     // {date: "2018-10-19", nav: "1.3164", percentage: "3.67", value: "1.3164"}
     // {date: "2018-10-18", nav: "1.2698", percentage: "-2.60", value: "1.2698"}
@@ -98,10 +120,15 @@ Page({
 
       // 2018-10-18 -> 10-18
       date = lastDate.split('-').slice(1).join('-');
+
       percent = +percentage;
-      current = (amount * prices[code][0].value).toFixed(2);
-      profit = (current - yesterday).toFixed(2);
-      totalProfit = (current - start).toFixed(2);
+      current = amount * prices[code][0].value;
+      oriProfit = current - yesterday;
+      oriTotalProfit = current - start;
+
+      profit = oriProfit.toFixed(2);
+      totalProfit = oriTotalProfit.toFixed(2);
+      current = current.toFixed(2);
     }
 
     return {
@@ -113,6 +140,8 @@ Page({
       totalProfit,
       color: profit.includes('-') ? 'lose' : 'win',
       totalColor: totalProfit.includes('-') ? 'lose' : 'win',
+      oriProfit,
+      oriTotalProfit,
     };
   },
 
