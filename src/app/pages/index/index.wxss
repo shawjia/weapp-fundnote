@@ -33,11 +33,6 @@
   padding-left: 10rpx;
 }
 
-.code-and-from {
-  display: flex;
-  align-items: center;
-}
-
 .win {
   color: #09bb07;
 }

@@ -101,7 +101,7 @@ Page({
         code,
         price,
         amount,
-        from: from || '未知',
+        from: from || '其他',
         add: now - index,
       };
     });
@@ -121,7 +121,7 @@ Page({
     }
 
     const funds = [...app.globalData.funds, {
-      code, amount, price, from: from || '未知', add: Date.now(),
+      code, amount, price, from: from || '其他', add: Date.now(),
     }];
 
     this.syncFunds(funds);

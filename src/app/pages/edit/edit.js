@@ -89,7 +89,7 @@ Page({
 
     fund.amount = amount;
     fund.price = price;
-    fund.from = from || '未知';
+    fund.from = from || '其他';
     fund.edit = Date.now();
 
     this.syncFunds(funds);

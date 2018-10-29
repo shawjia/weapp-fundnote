@@ -11,10 +11,6 @@ let prices = {};
 Page({
   data: {
     fundList: [],
-    latestProfit: 0,
-    latestProfitColor: 'win',
-    allProfit: 0,
-    allProfitColor: 'win',
   },
 
   onPullDownRefresh() {
@@ -78,19 +74,47 @@ Page({
     let latestProfit = 0;
     let allProfit = 0;
 
-    const fundList = funds.map((fund) => {
-      const { code } = fund;
+    const froms = [...new Set(funds.map(({ from }) => from))];
+    const fundList = froms.map(from => ({
+      from,
+      list: [],
+      latestProfitColor: 'win',
+      allProfitColor: 'win',
+      latestProfit: 0,
+      allProfit: 0,
+    }));
+
+    const all = funds.map((fund, fundIndex) => {
+      const { code, from } = fund;
 
       const item = this.calProfit(fund);
+
       item.name = names[code] || '-';
+      item.fundIndex = fundIndex;
 
       latestProfit += item.oriProfit;
       allProfit += item.oriTotalProfit;
 
+      const match = fundList.find(v => v.from === from);
+
+      match.latestProfit += item.oriProfit;
+      match.allProfit += item.oriTotalProfit;
+
       delete item.oriProfit;
       delete item.oriTotalProfit;
 
+      match.list.push(item);
+
       return item;
+    });
+
+    fundList.forEach((v) => {
+      const o = v;
+
+      o.latestProfit = formatPrice(v.latestProfit.toFixed(2));
+      o.allProfit = formatPrice(v.allProfit.toFixed(2));
+      o.latestProfitColor = o.latestProfit.includes('-') ? 'lose' : 'win';
+      o.allProfitColor = o.allProfit.includes('-') ? 'lose' : 'win';
     });
 
     latestProfit = formatPrice(latestProfit.toFixed(2));
@@ -99,10 +123,18 @@ Page({
     const latestProfitColor = latestProfit.includes('-') ? 'lose' : 'win';
     const allProfitColor = allProfit.includes('-') ? 'lose' : 'win';
 
+    if (fundList.length) {
+      fundList.unshift({
+        from: '全部',
+        list: all,
+        latestProfitColor,
+        allProfitColor,
+        latestProfit,
+        allProfit,
+      });
+    }
 
-    this.setData({
-      fundList, latestProfit, allProfit, latestProfitColor, allProfitColor,
-    });
+    this.setData({ fundList });
   },
 
   calProfit(item) {

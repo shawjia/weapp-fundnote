@@ -1,36 +1,42 @@
-<van-panel use-footer-slot footer-class="fund-total" wx:if="{{ fundList.length }}">
+<van-tabs wx:if="{{ fundList.length }}">
 
-  <view class="fund-item">
-    <view class="name">基金名称</view>
-    <view class="latest">近日收益</view>
-    <view>总收益</view>
-  </view>
+  <van-tab title="{{ item.from }}" wx:for="{{ fundList }}" wx:key="from">
 
-  <view class="fund-item" wx:for="{{ fundList }}" wx:key="add" bindtap="goEdit" data-id="{{ index }}">
-    <view class="name">
-      <view class="code-and-from">
-        <text>{{ item.code }}</text>
-        <text class="small from">{{ item.from }}</text>
+    <van-panel use-footer-slot footer-class="fund-total">
+
+      <view class="fund-item">
+        <view class="name">基金名称</view>
+        <view class="latest">近日收益</view>
+        <view>总收益</view>
       </view>
-      <view class="small">{{ item.name }}</view>
-    </view>
-    <view class="latest">
-      <view class="{{ item.color }}">{{ item.profit }}</view>
-      <view class="small">{{ item.percent + '%'}}</view>
-    </view>
-    <view>
-      <view class="{{ item.totalColor }}">{{ item.totalProfit }}</view>
-      <view class="small">{{ item.date }}</view>
-    </view>
-  </view>
+
+      <view class="fund-item" wx:for="{{ item.list }}" wx:key="add" bindtap="goEdit" data-id="{{ item.fundIndex }}">
+        <view class="name">
+          <view>{{ item.code }}</view>
+          <view class="small">{{ item.name }}</view>
+        </view>
+        <view class="latest">
+          <view class="{{ item.color }}">{{ item.profit }}</view>
+          <view class="small">{{ item.percent + '%'}}</view>
+        </view>
+        <view>
+          <view class="{{ item.totalColor }}">{{ item.totalProfit }}</view>
+          <view class="small">{{ item.date }}</view>
+        </view>
+      </view>
 
 
-  <view slot="footer">
-    <view class="{{ latestProfitColor }}"> 近日: {{ latestProfit }} </view>
-    <view class="{{ allProfitColor }}"> 累计: {{ allProfit }} </view>
-  </view>
+      <view slot="footer">
+        <view class="{{ item.latestProfitColor }}"> 近日: {{ item.latestProfit }} </view>
+        <view class="{{ item.allProfitColor }}"> 累计: {{ item.allProfit }} </view>
+      </view>
 
-</van-panel>
+    </van-panel>
+
+  </van-tab>
+
+</van-tabs>
+
 
 <van-button custom-class="fund-btn" size="large" bindtap="switchAdd">新增</van-button>
 
