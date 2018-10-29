@@ -40,4 +40,4 @@
 
 <van-button custom-class="fund-btn" size="large" bindtap="switchAdd">新增</van-button>
 
-<footer />
+<footer pull />
