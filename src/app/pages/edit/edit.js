@@ -97,12 +97,9 @@ Page({
 
   handleDel() {
     wx.showActionSheet({
-      itemList: ['删除', '取消'],
-      success: (res) => {
-        if (res.tapIndex > 0) {
-          return;
-        }
-
+      itemList: ['删除'],
+      itemColor: 'red',
+      success: () => {
         const { funds } = app.globalData;
 
         funds.splice(this.data.id, 1);
