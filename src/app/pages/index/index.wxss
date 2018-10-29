@@ -34,11 +34,11 @@
 }
 
 .win {
-  color: #09bb07;
+  color: #e64340;
 }
 
 .lose {
-  color: #e64340;
+  color: #09bb07;
 }
 
 .fund-total {
