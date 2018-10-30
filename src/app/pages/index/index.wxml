@@ -2,12 +2,12 @@
 
   <van-tab title="{{ item.from }}" wx:for="{{ fundList }}" wx:key="from">
 
-    <van-panel use-footer-slot footer-class="fund-total">
+    <van-panel use-footer-slot footer-class="fund-footer">
 
       <view class="fund-item">
         <view class="name">基金名称</view>
         <view class="latest">近日收益</view>
-        <view>总收益</view>
+        <view class="total">总收益</view>
       </view>
 
       <view class="fund-item" wx:for="{{ item.list }}" wx:key="add" bindtap="goEdit" data-id="{{ item.fundIndex }}">
@@ -19,16 +19,24 @@
           <view class="{{ item.color }}">{{ item.profit }}</view>
           <view class="small">{{ item.percent + '%'}}</view>
         </view>
-        <view>
+        <view class="total">
           <view class="{{ item.totalColor }}">{{ item.totalProfit }}</view>
           <view class="small">{{ item.date }}</view>
         </view>
       </view>
 
-
       <view slot="footer">
-        <view class="{{ item.latestProfitColor }}"> 近日: {{ item.latestProfit }} </view>
-        <view class="{{ item.allProfitColor }}"> 累计: {{ item.allProfit }} </view>
+
+        <view>
+          <text>近日：</text>
+          <text class="{{ item.latestProfitColor }}">{{ item.latestProfit }}</text>
+        </view>
+
+        <view>
+          <text>累计：</text>
+          <text class="{{ item.allProfitColor }}">{{ item.allProfit }}</text>
+        </view>
+
       </view>
 
     </van-panel>
