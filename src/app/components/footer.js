@@ -1,7 +1,7 @@
 Component({
 
   data: {
-    version: 'v1.3.2',
+    version: 'v1.4.0',
   },
 
   properties: {
