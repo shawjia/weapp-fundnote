@@ -22,7 +22,7 @@ Page({
     const fund = app.globalData.funds[id];
 
     if (!fund) {
-      this.switchHome();
+      app.switchHome();
     }
 
     const {
@@ -67,14 +67,6 @@ Page({
     this.setData(newData);
   },
 
-  switchHome() {
-    if (getCurrentPages().length > 1) {
-      wx.navigateBack({ delta: 1 });
-    } else {
-      wx.redirectTo({ url: '/pages/index/index' });
-    }
-  },
-
   handleEdit() {
     const {
       amount, price, from, canSumit, id,
@@ -92,44 +84,20 @@ Page({
     fund.from = from || '其他';
     fund.edit = Date.now();
 
-    this.syncFunds(funds);
+    app.syncFunds(funds, '编辑');
   },
 
   handleDel() {
     wx.showActionSheet({
       itemList: ['删除'],
-      itemColor: 'red',
+      itemColor: '#f44',
       success: () => {
         const { funds } = app.globalData;
 
         funds.splice(this.data.id, 1);
-        this.syncFunds(funds);
+        app.syncFunds(funds, '删除');
       },
     });
-  },
-
-  // TODO: cloud sync is optional, save local by default
-
-  syncFunds(funds) {
-    wx.showLoading({ title: '执行中...', mask: true });
-
-    wx.cloud.callFunction({ name: 'sync', data: { funds } })
-      .then((res) => {
-        console.log(res.result.code);
-
-        wx.hideLoading();
-
-        wx.showToast({ title: '执行成功' });
-
-        this.switchHome();
-      })
-      .catch((err) => {
-        console.error(err);
-
-        wx.hideLoading();
-
-        wx.showToast({ title: '执行失败', icon: 'none' });
-      });
   },
 
 });

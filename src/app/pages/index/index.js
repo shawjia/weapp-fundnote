@@ -4,13 +4,15 @@ import { formatPrice } from '../../utils/util';
 
 const api = require('../../api');
 
-
 const app = getApp();
+const DEFAULT_TAG = '全部';
 let prices = {};
 
 Page({
   data: {
     fundList: [],
+    currentTag: DEFAULT_TAG,
+    showDel: false,
   },
 
   onPullDownRefresh() {
@@ -189,6 +191,28 @@ Page({
     const { id } = e.currentTarget.dataset;
 
     wx.navigateTo({ url: `/pages/edit/edit?id=${id}` });
+  },
+
+  onSwitchTab(e) {
+    const currentTag = e.detail.title;
+    const showDel = currentTag !== DEFAULT_TAG;
+
+    this.setData({ currentTag, showDel });
+  },
+
+  delFunds() {
+    const { funds } = app.globalData;
+    const { currentTag } = this.data;
+
+    wx.showActionSheet({
+      itemList: [`删除所有 ${currentTag} 基金`],
+      itemColor: '#f44',
+      success: () => {
+        app.globalData.funds = funds.filter(({ from }) => from !== currentTag);
+
+        app.syncFunds(app.globalData.funds, '删除');
+      },
+    });
   },
 
 });

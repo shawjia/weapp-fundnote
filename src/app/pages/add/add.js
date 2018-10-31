@@ -66,14 +66,6 @@ Page({
     this.setData({ text, hasTextErr: text !== '' });
   },
 
-  switchHome() {
-    if (getCurrentPages().length > 1) {
-      wx.navigateBack({ delta: 1 });
-    } else {
-      wx.redirectTo({ url: '/pages/index/index' });
-    }
-  },
-
   handleBatch() {
     const { text } = this.data;
     const lines = text.split(/\n|\r/)
@@ -108,7 +100,7 @@ Page({
 
     const funds = [...app.globalData.funds, ...newFunds];
 
-    this.syncFunds(funds);
+    app.syncFunds(funds, '添加');
   },
 
   handleAdd() {
@@ -124,33 +116,7 @@ Page({
       code, amount, price, from: from || '其他', add: Date.now(),
     }];
 
-    this.syncFunds(funds);
-  },
-
-  // TODO: cloud sync is optional, save local by default
-
-  syncFunds(funds) {
-    app.globalData.funds = funds;
-
-    wx.showLoading({ title: '添加中...', mask: true });
-
-    wx.cloud.callFunction({ name: 'sync', data: { funds } })
-      .then((res) => {
-        console.log(res.result.code);
-
-        wx.hideLoading();
-
-        wx.showToast({ title: '添加成功' });
-
-        this.switchHome();
-      })
-      .catch((err) => {
-        console.error(err);
-
-        wx.hideLoading();
-
-        wx.showToast({ title: '添加失败', icon: 'none' });
-      });
+    app.syncFunds(funds, '添加');
   },
 
 });

@@ -1,4 +1,4 @@
-<van-tabs wx:if="{{ fundList.length }}">
+<van-tabs wx:if="{{ fundList.length }}" bind:change="onSwitchTab">
 
   <van-tab title="{{ item.from }}" wx:for="{{ fundList }}" wx:key="from">
 
@@ -47,5 +47,8 @@
 
 
 <van-button custom-class="fund-btn" size="large" bindtap="switchAdd">新增</van-button>
+<van-button wx:if="{{ showDel }}" type="danger" size="large" bindtap="delFunds">
+  删除所有 {{ currentTag }} 基金
+</van-button>
 
 <footer pull />
