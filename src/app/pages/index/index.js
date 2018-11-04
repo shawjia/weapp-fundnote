@@ -11,6 +11,9 @@ let prices = {};
 Page({
   data: {
     fundList: [],
+    loadingFunds: true,
+    loadingNames: false,
+    loadingPrices: false,
     currentTag: DEFAULT_TAG,
     showDel: false,
   },
@@ -32,13 +35,15 @@ Page({
   onShow() {
     wx.cloud.callFunction({ name: 'funds' })
       .then((res) => {
+        this.setData({ loadingFunds: false });
+
         app.globalData.funds = res.result.funds || [];
 
         this.fetchNames();
       })
       .catch((err) => {
         console.error(err);
-        throw (err);
+        throw err;
       });
   },
 
@@ -47,13 +52,20 @@ Page({
     const codes = [...(new Set(funds.map(({ code }) => code)))]
       .filter(code => !(code in names));
 
+    this.setData({ loadingNames: true });
+
     Promise.all(codes.map(code => api.info(code)))
       .then((v) => {
         v.forEach(({ fd_name: name, fd_code: code }) => {
           names[code] = name;
         });
+        this.setData({ loadingNames: false });
       })
-      .then(this.fetchPrices);
+      .then(this.fetchPrices)
+      .catch((err) => {
+        console.error(err);
+        throw err;
+      });
   },
 
   fetchPrices() {
@@ -61,14 +73,22 @@ Page({
     const codes = [...(new Set(funds.map(({ code }) => code)))]
       .filter(code => !(code in prices));
 
+    this.setData({ loadingPrices: true });
+
     Promise.all(codes.map(code => api.prices(code)))
       .then((v) => {
         v.forEach(({ items }, index) => {
           const code = codes[index];
           prices[code] = items;
         });
+
+        this.setData({ loadingPrices: false });
       })
-      .then(this.setFundList);
+      .then(this.setFundList)
+      .catch((err) => {
+        console.error(err);
+        throw err;
+      });
   },
 
   setFundList() {
@@ -85,7 +105,6 @@ Page({
       latestProfit: 0,
       allProfit: 0,
     }));
-
     const all = funds.map((fund, fundIndex) => {
       const { code, from } = fund;
 
