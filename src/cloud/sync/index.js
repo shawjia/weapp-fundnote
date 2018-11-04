@@ -5,7 +5,8 @@ const db = cloud.database();
 
 exports.main = async (event) => {
   const { funds } = event;
-  const { openId } = event.userInfo;
+  const { OPENID: openId } = cloud.getWXContext();
+
   const oldFunds = await db.collection('funds')
     .where({ _openid: openId })
     .limit(1)
