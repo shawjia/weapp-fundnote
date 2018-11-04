@@ -45,8 +45,15 @@
 
 </van-tabs>
 
-<van-button wx:if="{{ loadingFunds || loadingNames || loadingPrices }}" loading size="large" custom-class="fund-btn" />
-<van-button wx:else custom-class="fund-btn" size="large" bindtap="switchAdd">新增</van-button>
+<van-button wx:if="{{ showRetry }}" custom-class="fund-btn" size="large" bindtap="retry">
+  加载{{ retryName }}失败，点击重试
+</van-button>
+
+<block wx:else>
+  <van-button wx:if="{{ loadingFunds || loadingNames || loadingPrices }}" loading size="large" custom-class="fund-btn">加载中</van-button>
+  <van-button wx:else custom-class="fund-btn" size="large" bindtap="switchAdd">新增</van-button>
+</block>
+
 <van-button wx:if="{{ showDel }}" type="danger" size="large" bindtap="delFunds">
   删除所有 {{ currentTag }} 基金
 </van-button>

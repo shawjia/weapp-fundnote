@@ -14,6 +14,9 @@ Page({
     loadingFunds: true,
     loadingNames: false,
     loadingPrices: false,
+    showRetry: false,
+    retryFunc: '',
+    retryName: '',
     currentTag: DEFAULT_TAG,
     showDel: false,
   },
@@ -33,6 +36,12 @@ Page({
   },
 
   onShow() {
+    this.fetchFunds();
+  },
+
+  fetchFunds() {
+    this.setData({ loadingFunds: true });
+
     wx.cloud.callFunction({ name: 'funds' })
       .then((res) => {
         this.setData({ loadingFunds: false });
@@ -43,7 +52,13 @@ Page({
       })
       .catch((err) => {
         console.error(err);
-        throw err;
+
+        this.setData({
+          loadingFunds: false,
+          showRetry: true,
+          retryFunc: 'fetchFunds',
+          retryName: '基金',
+        });
       });
   },
 
@@ -64,7 +79,13 @@ Page({
       .then(this.fetchPrices)
       .catch((err) => {
         console.error(err);
-        throw err;
+
+        this.setData({
+          loadingNames: false,
+          showRetry: true,
+          retryFunc: 'fetchNames',
+          retryName: '信息',
+        });
       });
   },
 
@@ -87,7 +108,13 @@ Page({
       .then(this.setFundList)
       .catch((err) => {
         console.error(err);
-        throw err;
+
+        this.setData({
+          loadingPrices: false,
+          showRetry: true,
+          retryFunc: 'fetchPrices',
+          retryName: '价格',
+        });
       });
   },
 
@@ -232,6 +259,16 @@ Page({
         app.syncFunds(app.globalData.funds, '删除');
       },
     });
+  },
+
+  retry() {
+    const { retryFunc } = this.data;
+
+    if (retryFunc) {
+      this[retryFunc]();
+
+      this.setData({ showRetry: false });
+    }
   },
 
 });
